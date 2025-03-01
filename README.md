@@ -1,2 +1,2 @@
-# Campus-Hub-310
+# SuEvent-310
 Cs310 mobile application course project Sabancı University
