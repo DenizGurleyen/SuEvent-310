@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'screens/home_page.dart';
+import 'screens/map_page.dart';
+import 'screens/club_page.dart';
+import 'screens/explore_page.dart';
+import 'screens/profile_page.dart';
 
 void main() {
   runApp(const SuEventApp());
@@ -11,27 +16,18 @@ class SuEventApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SuEvent',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        fontFamily: 'Roboto', // Custom font (we'll add later)
+        fontFamily: 'Poppins',
       ),
-      home: const HomeScreen(),
+      initialRoute: '/home',
       routes: {
-        '/home': (context) => const HomeScreen(),
-        // You’ll add more screens here later (like /login, /features, etc.)
+        '/map': (context) => const MapPage(),
+        '/clubs': (context) => const ClubPage(),
+        '/home': (context) => HomePage(),
+        '/explore': (context) => const ExplorePage(),
+        '/profile': (context) => const ProfilePage(),
       },
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('SuEvent Home')),
-      body: const Center(child: Text('Welcome to SuEvent!')),
     );
   }
 }
