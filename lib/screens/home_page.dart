@@ -7,10 +7,11 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   final List<String> sliderImages = const [
-    'https://via.placeholder.com/300x150/0033FF/FFFFFF?text=Yüksek+Sadakat',
-    'https://via.placeholder.com/300x150/9900CC/FFFFFF?text=Another+Event',
-    'https://via.placeholder.com/300x150/FF0066/FFFFFF?text=Don\'t+Miss+It',
+    'https://picsum.photos/id/1015/300/150',
+    'https://picsum.photos/id/1016/300/150',
+    'https://picsum.photos/id/1018/300/150',
   ];
+
 
   final List<Map<String, dynamic>> events = const [
     {
@@ -24,36 +25,61 @@ class HomePage extends StatelessWidget {
     {
       'title': 'Graphic Talk',
       'type': 'Söyleşi',
-      'image': 'https://via.placeholder.com/200x100',
+      'image': 'https://images.unsplash.com/photo-1742943892627-f7e4ddf91224?q=80&w=3269&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       'price': '1.5K',
       'rating': 4.6,
       'attendees': '5200 Std',
     },
   ];
 
+  final List<Map<String, String>> sliderContent = const [
+  {
+    'date': '20 MART 2025',
+    'title': 'Yüksek Sadakat',
+    'desc': 'Yüksek Sadakat, güçlü melodileri ve etkileyici sahne performanslarıyla SGM\'de!',
+  },
+  {
+    'date': '5 NİSAN 2025',
+    'title': 'Graphic Design Talk',
+    'desc': 'Grafik tasarımda yaratıcılığın sınırlarını zorlayan bir etkinlik!',
+  },
+];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primaryDark,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.blue,
-        currentIndex: 2,
-        onTap: (index) {
-          final routes = ['/map', '/clubs', '/home', '/explore', '/profile'];
-          if (ModalRoute.of(context)?.settings.name != routes[index]) {
-            Navigator.pushNamed(context, routes[index]);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Harita'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kulüp'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Genel'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
+      bottomNavigationBar: ClipRRect(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(24),
+        topRight: Radius.circular(24),
       ),
+      child: Material(
+        color: AppColors.primaryDark, // ✅ force background color
+        child: BottomNavigationBar(
+          backgroundColor: Colors.blue, // 👈 let parent (Material) handle it
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.blue,
+          currentIndex: 2,
+          onTap: (index) {
+            final routes = ['/map', '/clubs', '/home', '/explore', '/profile'];
+            if (ModalRoute.of(context)?.settings.name != routes[index]) {
+              Navigator.pushNamed(context, routes[index]);
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Harita'),
+            BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kulüp'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Genel'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          ],
+        ),
+      ),
+    ),
+
+
+
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -107,54 +133,148 @@ class HomePage extends StatelessWidget {
 
   Widget _buildSearchBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      height: 65,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.searchBarBackground,
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          )
+        ],
       ),
       child: Row(
         children: [
-          const Icon(Icons.search, color: Colors.grey),
-          const SizedBox(width: 8),
+          const Icon(Icons.search, color: Colors.black, size: 24),
+          const SizedBox(width: 10),
           const Expanded(
             child: TextField(
-              decoration: InputDecoration(hintText: 'Search for..', border: InputBorder.none),
+              style: TextStyle(fontSize: 20),
+              decoration: InputDecoration(
+                hintText: 'Search for..',
+                hintStyle: TextStyle(color: Colors.grey, fontSize: 20, fontWeight: FontWeight.w500),
+                border: InputBorder.none,
+              ),
             ),
           ),
-          Icon(Icons.tune, color: Colors.grey[600]),
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0xFF1E6FFF), // same blue as your design
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: const Icon(Icons.tune, color: Colors.white, size: 20),
+          )
         ],
       ),
     );
   }
 
+  Widget _buildPageDots() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(4, (index) {
+        bool isActive = index == 0; // set this dynamically if you want later
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: isActive ? 12 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: isActive ? Colors.amber : Colors.white54,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        );
+      }),
+    );
+  }
+
+
   Widget _buildSlider(BuildContext context) {
-    return SizedBox(
-      height: 140,
-      child: PageView.builder(
-        itemCount: sliderImages.length,
-        controller: PageController(viewportFraction: 0.9),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: AppColors.primaryBlue,
-                image: DecorationImage(
-                  image: NetworkImage(sliderImages[index]),
-                  fit: BoxFit.cover,
-                ),
-              ),
+    return Container(
+      height: 200,
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primaryBlue,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: PageController(viewportFraction: 1.0),
+              itemCount: sliderContent.length,
+              onPageChanged: (index) {
+                // hook for indicator
+              },
+              itemBuilder: (context, index) {
+                final item = sliderContent[index];
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item['date']!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['title']!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      item['desc']!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(sliderContent.length, (index) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: index == 0 ? 12 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: index == 0 ? Colors.amber : Colors.white54,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
 
+
+
+
+
   Widget _buildEventList() {
     return SizedBox(
-      height: 190,
+      height: 250,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: events.length,
@@ -163,7 +283,7 @@ class HomePage extends StatelessWidget {
           final event = events[index];
           final isAsset = event['image'].toString().startsWith('assets');
           return Container(
-            width: 240,
+            width: 270,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: Colors.white,
@@ -175,8 +295,8 @@ class HomePage extends StatelessWidget {
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                   child: isAsset
-                      ? Image.asset(event['image'], height: 100, width: 240, fit: BoxFit.cover)
-                      : Image.network(event['image'], height: 100, width: 240, fit: BoxFit.cover),
+                      ? Image.asset(event['image'], height: 150, width: 270, fit: BoxFit.cover)
+                      : Image.network(event['image'], height: 150, width: 270, fit: BoxFit.cover),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10),
