@@ -19,6 +19,7 @@ class SuEventApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Poppins',
+        useMaterial3: false,
       ),
       initialRoute: '/home',
       routes: {
