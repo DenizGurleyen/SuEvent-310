@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_padding.dart';
 import '../utils/app_text_styles.dart';
+import '../widgets/custom_bottom_nav.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -35,25 +37,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primaryDark,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.blue,
-        currentIndex: 2,
-        onTap: (index) {
-          final routes = ['/map', '/clubs', '/home', '/explore', '/profile'];
-          if (ModalRoute.of(context)?.settings.name != routes[index]) {
-            Navigator.pushNamed(context, routes[index]);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Harita'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Kulüp'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Ana Sayfa'),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Genel'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-      ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

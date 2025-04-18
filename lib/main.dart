@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'screens/home_page.dart';
-import 'screens/map_page.dart';
 import 'screens/club_page.dart';
 import 'screens/explore_page.dart';
 import 'screens/profile_page.dart';
+import 'screens/profile_settings_page.dart';
 
 void main() {
   runApp(const SuEventApp());
@@ -22,11 +22,11 @@ class SuEventApp extends StatelessWidget {
       ),
       initialRoute: '/home',
       routes: {
-        '/map': (context) => const MapPage(),
         '/clubs': (context) => const ClubPage(),
         '/home': (context) => HomePage(),
         '/explore': (context) => const ExplorePage(),
-        '/profile': (context) => const ProfilePage(),
+        '/profile': (context) => ProfilePage(),
+        '/profile/settings': (context) => const ProfileSettingsPage(),
       },
     );
   }
