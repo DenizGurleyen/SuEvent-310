@@ -4,9 +4,9 @@ import '../utils/app_text_styles.dart';
 import '../widgets/custom_bottom_nav.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
-  // Dummy saved activities data (can be reused from HomePage)
+  // Dummy saved activities data
   final List<Map<String, dynamic>> savedActivities = const [
     {
       'title': 'Yüksek Sadakat',
@@ -35,12 +35,22 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: const Text('Profil',
+        style: TextStyle(color: Colors.white),  // ← your color here
+        ),
         backgroundColor: AppColors.primaryDark,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: const CustomBottomNav(currentIndex: 3),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -48,7 +58,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             Text("Kaydedilen Etkinlikler", style: AppTextStyles.header),
             const SizedBox(height: 10),
-            Expanded(child: _buildSavedActivitiesList()),
+            Expanded(child: _buildSavedActivitiesList(context)),
           ],
         ),
       ),
@@ -78,12 +88,12 @@ class ProfilePage extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _buildSavedActivitiesList() {
+  Widget _buildSavedActivitiesList(BuildContext context) {
     return ListView.builder(
       itemCount: savedActivities.length,
       itemBuilder: (context, index) {
@@ -91,38 +101,36 @@ class ProfilePage extends StatelessWidget {
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: ListTile(
-            onTap: () {
-              _showEventDetails(context, savedActivities[index]);
-            },
+            leading: const Icon(Icons.event),
             title: Text(activity['title'], style: AppTextStyles.cardTitle),
             subtitle: Text("${activity['date']} • ${activity['description']}"),
-            leading: const Icon(Icons.event),
             trailing: const Icon(Icons.chevron_right),
+            onTap: () => _showEventDetails(context, activity),
           ),
         );
       },
     );
   }
+
   void _showEventDetails(BuildContext context, Map<String, dynamic> event) {
+    // Extract values with fallbacks
+    final String title = event['title'] ?? 'Etkinlik';
+    final String type = event['type'] ?? 'Etkinlik Türü';
+    final String image = event['image'] ?? '';
+    final String date = event['date'] ?? 'Tarih Bilinmiyor';
+    final String price = event['price'] ?? 'Fiyat Bilinmiyor';
+    final double rating = (event['rating'] ?? 0).toDouble();
+    final String attendees = event['attendees'] ?? '0';
+    final String description = event['description'] ?? 'Açıklama yok';
+    final bool isAsset = image.startsWith('assets');
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        // Safely extract values with fallbacks
-        final String title = event['title'] ?? 'Etkinlik';
-        final String type = event['type'] ?? 'Etkinlik Türü';
-        final String image = event['image'] ?? '';
-        final String date = event['date'] ?? 'Tarih Bilinmiyor';
-        final String price = event['price'] ?? 'Fiyat Bilinmiyor';
-        final double rating = (event['rating'] ?? 0).toDouble();
-        final String attendees = event['attendees'] ?? '0';
-        final String description = event['description'] ?? 'Açıklama yok';
-
-        final bool isAsset = image.startsWith('assets');
-
+      builder: (_) {
         return DraggableScrollableSheet(
           expand: false,
           initialChildSize: 0.65,
@@ -141,8 +149,18 @@ class ProfilePage extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: isAsset
-                              ? Image.asset(image, height: 180, width: double.infinity, fit: BoxFit.cover)
-                              : Image.network(image, height: 180, width: double.infinity, fit: BoxFit.cover),
+                              ? Image.asset(
+                                  image,
+                                  height: 180,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  image,
+                                  height: 180,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                         const SizedBox(height: 16),
                         Text(title, style: AppTextStyles.header),
@@ -170,9 +188,10 @@ class ProfilePage extends StatelessWidget {
                         const SizedBox(height: 30),
                         ElevatedButton.icon(
                           onPressed: () {
-                            // You can show a SnackBar just for the demo
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Etkinlik kayıttan kaldırıldı.")),
+                              const SnackBar(
+                                content: Text("Etkinlik kayıttan kaldırıldı."),
+                              ),
                             );
                           },
                           icon: const Icon(Icons.bookmark_remove),
@@ -181,7 +200,9 @@ class ProfilePage extends StatelessWidget {
                             backgroundColor: Colors.redAccent,
                             foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 48),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
                         ),
                       ],

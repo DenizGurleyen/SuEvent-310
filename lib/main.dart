@@ -4,6 +4,7 @@ import 'screens/club_page.dart';
 import 'screens/explore_page.dart';
 import 'screens/profile_page.dart';
 import 'screens/profile_settings_page.dart';
+import 'screens/settings_page.dart';
 
 void main() {
   runApp(const SuEventApp());
@@ -27,6 +28,7 @@ class SuEventApp extends StatelessWidget {
         '/explore': (context) => const ExplorePage(),
         '/profile': (context) => ProfilePage(),
         '/profile/settings': (context) => const ProfileSettingsPage(),
+        '/settings': (_) => const SettingsPage(),
       },
     );
   }
