@@ -12,55 +12,67 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   final List<Map<String, dynamic>> universityEvents = [
-    {'title': 'CompTalks', 'club': 'IEEE', 'likes': 250, 'liked': false},
-    {'title': 'IMES25', 'club': 'IES', 'likes': 115, 'liked': false},
-    {'title': 'Last Dance', 'club': 'SUDance', 'likes': 60, 'liked': false},
+    {'title': 'CompTalks', 'club': 'IEEE', 'likes': 250, 'liked': false, 'favorited': false},
+    {'title': 'IMES25', 'club': 'IES', 'likes': 115, 'liked': false, 'favorited': false},
+    {'title': 'Last Dance', 'club': 'SUDance', 'likes': 60, 'liked': false, 'favorited': false},
   ];
 
   final List<Map<String, dynamic>> otherEvents = [
-    {'title': 'Chess Tournament', 'organizer': 'Ahmet Mehmet', 'likes': 23, 'liked': false},
-    {'title': 'Lake Party', 'organizer': 'Ali Veli', 'likes': 5, 'liked': false},
+    {'title': 'Chess Tournament', 'organizer': 'Ahmet Mehmet', 'likes': 24, 'liked': false, 'favorited': false},
+    {'title': 'Lake Party', 'organizer': 'Ali Veli', 'likes': 5, 'liked': false, 'favorited': false},
   ];
 
-  void toggleFavorite(List<Map<String, dynamic>> list, int index) {
+  void toggleLike(List<Map<String, dynamic>> events, int index) {
     setState(() {
-      list[index]['liked'] = !(list[index]['liked'] ?? false);
+      events[index]['liked'] = !(events[index]['liked'] ?? false);
+      events[index]['likes'] += events[index]['liked'] ? 1 : -1;
     });
   }
 
-  void goToEventDetails(Map<String, dynamic> event) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EventDetailsPage(event: event),
-      ),
-    );
+  void toggleFavorite(List<Map<String, dynamic>> events, int index) {
+    setState(() {
+      events[index]['favorited'] = !(events[index]['favorited'] ?? false);
+    });
   }
 
-  Widget buildEventCard(Map<String, dynamic> event, bool isUniversity, int index) {
+  Widget buildEventCard(Map<String, dynamic> event, bool isClubEvent, int index) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         leading: IconButton(
           icon: Icon(
-            event['liked'] ? Icons.star : Icons.star_border,
-            color: event['liked'] ? Colors.amber : Colors.grey,
+            event['favorited'] ? Icons.star : Icons.star_border,
+            color: event['favorited'] ? Colors.amber : Colors.grey,
           ),
-          onPressed: () {
-            toggleFavorite(isUniversity ? universityEvents : otherEvents, index);
-          },
+          onPressed: () => toggleFavorite(
+              isClubEvent ? universityEvents : otherEvents, index),
         ),
         title: Text(event['title']),
-        subtitle: Text(isUniversity ? "Club: ${event['club']}" : "Organizer: ${event['organizer']}"),
+        subtitle: Text(isClubEvent
+            ? 'Club: ${event['club']}'
+            : 'Organizer: ${event['organizer']}'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.thumb_up, size: 18, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text("${event['likes']}"),
+            IconButton(
+              icon: Icon(
+                event['liked'] ? Icons.favorite : Icons.favorite_border,
+                color: event['liked'] ? Colors.red : Colors.grey,
+              ),
+              onPressed: () => toggleLike(
+                  isClubEvent ? universityEvents : otherEvents, index),
+            ),
+            Text('${event['likes']}'),
           ],
         ),
-        onTap: () => goToEventDetails(event),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const EventDetailsPage(),
+            ),
+          );
+        },
       ),
     );
   }
@@ -78,13 +90,23 @@ class _ExplorePageState extends State<ExplorePage> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            const Text("University Club Events", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ...List.generate(universityEvents.length,
-                    (index) => buildEventCard(universityEvents[index], true, index)),
+            const Text(
+              "University Club Events",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ...List.generate(
+              universityEvents.length,
+                  (index) => buildEventCard(universityEvents[index], true, index),
+            ),
             const SizedBox(height: 24),
-            const Text("Other Events", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ...List.generate(otherEvents.length,
-                    (index) => buildEventCard(otherEvents[index], false, index)),
+            const Text(
+              "Other Events",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            ...List.generate(
+              otherEvents.length,
+                  (index) => buildEventCard(otherEvents[index], false, index),
+            ),
           ],
         ),
       ),
