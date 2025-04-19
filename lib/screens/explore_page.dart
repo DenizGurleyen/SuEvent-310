@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_bottom_nav.dart'; // alt menü importu
+import '../widgets/custom_bottom_nav.dart';
 import '../utils/app_colors.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -37,8 +37,8 @@ class _ExplorePageState extends State<ExplorePage> {
           children: [
             IconButton(
               icon: Icon(
-                event['liked'] ? Icons.favorite : Icons.favorite_border,
-                color: event['liked'] ? Colors.red : Colors.grey,
+                event['liked'] ? Icons.star : Icons.star_border,
+                color: event['liked'] ? Colors.amber : Colors.grey,
               ),
               onPressed: () => toggleLike(isUniversity ? universityEvents : otherEvents, index),
             ),
@@ -52,7 +52,10 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Explore Events")),
+      appBar: AppBar(
+        title: const Text("Explore"),
+        automaticallyImplyLeading: false, // geri butonunu gizle
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -65,7 +68,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 1), // 👈 bu satır önemli
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 }
