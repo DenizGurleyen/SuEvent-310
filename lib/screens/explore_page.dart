@@ -12,53 +12,77 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
   final List<Map<String, dynamic>> universityEvents = [
-    {'title': 'CompTalks', 'club': 'IEEE', 'likes': 250, 'liked': false},
-    {'title': 'IMES25', 'club': 'IES', 'likes': 115, 'liked': false},
-    {'title': 'Last Dance', 'club': 'SUDance', 'likes': 60, 'liked': false},
+    {'title': 'CompTalks', 'club': 'IEEE', 'likes': 250, 'liked': false, 'favorited': false},
+    {'title': 'IMIS’25', 'club': 'IES', 'likes': 115, 'liked': false, 'favorited': false},
+    {'title': 'Last Dance', 'club': 'SUDance', 'likes': 60, 'liked': false, 'favorited': false},
   ];
 
   final List<Map<String, dynamic>> otherEvents = [
-    {'title': 'Chess Tournament', 'organizer': 'Ahmet Mehmet', 'likes': 22, 'liked': false},
-    {'title': 'Lake Party', 'organizer': 'Ali Veli', 'likes': 5, 'liked': false},
+    {'title': 'Chess Tournament', 'organizer': 'Ahmet Mehmet', 'likes': 24, 'liked': false, 'favorited': false},
+    {'title': 'Lake Party', 'organizer': 'Ali Veli', 'likes': 5, 'liked': false, 'favorited': false},
   ];
 
   void toggleLike(List<Map<String, dynamic>> events, int index) {
     setState(() {
-      events[index]['liked'] = !(events[index]['liked'] ?? false);
-      events[index]['likes'] += events[index]['liked'] ? 1 : -1;
+      bool liked = events[index]['liked'];
+      events[index]['liked'] = !liked;
+      events[index]['likes'] += liked ? -1 : 1;
     });
   }
 
-  Widget buildEventCard(Map<String, dynamic> event, bool isUniversity, int index) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const EventDetailsPage()),
-        );
-      },
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        elevation: 2,
-        child: ListTile(
-          leading: Icon(
-            Icons.star,
-            color: event['liked'] ? Colors.orange : Colors.grey,
+  void toggleFavorite(List<Map<String, dynamic>> events, int index) {
+    setState(() {
+      events[index]['favorited'] = !events[index]['favorited'];
+    });
+  }
+
+  Widget buildEventCard(Map<String, dynamic> event, bool isClubEvent, int index) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        leading: IconButton(
+          icon: Icon(
+            event['favorited'] ? Icons.star : Icons.star_border,
+            color: event['favorited'] ? Colors.amber : Colors.grey,
           ),
-          title: Text(event['title']),
-          subtitle: Text(isUniversity ? 'Club: ${event['club']}' : 'Organizer: ${event['organizer']}'),
-          trailing: GestureDetector(
-            onTap: () => toggleLike(isUniversity ? universityEvents : otherEvents, index),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(event['likes'].toString()),
-                const SizedBox(width: 4),
-                const Icon(Icons.favorite_border),
-              ],
-            ),
-          ),
+          onPressed: () {
+            if (isClubEvent) {
+              toggleFavorite(universityEvents, index);
+            } else {
+              toggleFavorite(otherEvents, index);
+            }
+          },
         ),
+        title: Text(
+          event['title'],
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(isClubEvent ? event['club'] : event['organizer']),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(
+                event['liked'] ? Icons.thumb_up : Icons.thumb_up_outlined,
+                color: event['liked'] ? Colors.blue : Colors.grey,
+              ),
+              onPressed: () {
+                if (isClubEvent) {
+                  toggleLike(universityEvents, index);
+                } else {
+                  toggleLike(otherEvents, index);
+                }
+              },
+            ),
+            Text(event['likes'].toString()),
+          ],
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EventDetailsPage()),
+          );
+        },
       ),
     );
   }
@@ -68,7 +92,8 @@ class _ExplorePageState extends State<ExplorePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primaryDark,
-        title: const Text('Explore', style: TextStyle(color: Colors.white)),
+        title: const Text("Explore", style: TextStyle(color: Colors.white)),
+        automaticallyImplyLeading: false,
       ),
       bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
       body: Padding(
