@@ -69,10 +69,6 @@ class _ExplorePageState extends State<ExplorePage> {
       appBar: AppBar(
         backgroundColor: AppColors.primaryDark,
         title: const Text('Explore', style: TextStyle(color: Colors.white)),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
       body: Padding(
