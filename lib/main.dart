@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/login_page.dart';
+import 'screens/signup_page.dart';
 import 'screens/home_page.dart';
 import 'screens/club_page.dart';
 import 'screens/explore_page.dart';
@@ -21,15 +23,18 @@ class SuEventApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Poppins',
       ),
-      initialRoute: '/home',
+      initialRoute: '/login',
       routes: {
         '/clubs': (context) => const ClubPage(),
-        '/home': (context) => HomePage(),
+        '/home': (context) => const HomePage(),
         '/explore': (context) => const ExplorePage(),
-        '/profile': (context) => ProfilePage(),
+        '/profile': (context) => const ProfilePage(),
         '/profile/settings': (context) => const ProfileSettingsPage(),
-        '/settings': (_) => const SettingsPage(),
+        '/settings': (context) => const SettingsPage(),
+        '/login': (context) => const LoginPage(),
+        '/signup': (context) => const SignUpPage(),
       },
+
     );
   }
 }
