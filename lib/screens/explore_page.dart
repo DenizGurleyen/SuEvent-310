@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_bottom_nav.dart';
+import 'event_details_page.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -37,11 +38,11 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
       appBar: AppBar(
         title: const Text("Explore"),
-        automaticallyImplyLeading: false, // Sol üstteki geri tuşunu kaldırır
+        automaticallyImplyLeading: false,
       ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -99,6 +100,12 @@ class _ExplorePageState extends State<ExplorePage> {
             Text(event['likes'].toString()),
           ],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const EventDetailsPage()),
+          );
+        },
       ),
     );
   }
