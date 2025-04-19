@@ -52,7 +52,7 @@ class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Explore")),
+      appBar: AppBar(title: const Text("Explore Events")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
