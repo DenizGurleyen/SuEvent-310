@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
   {
     'date': '20 MART 2025',
     'title': 'Yüksek Sadakat',
-    'desc': 'Yüksek Sadakat, güçlü melodileri ve etkileyici sahne performanslarıyla SGM\'de!',
+    'desc': 'Yüksek Sadakat, güçlü melodileri ve etkileyici sahne performanslarıyla SGM\'de!!',
   },
   {
     'date': '5 NİSAN 2025',
