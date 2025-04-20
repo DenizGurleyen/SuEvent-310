@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
     {
       'title': 'Graphic Talk',
       'type': 'Söyleşi',
-      'image': 'https://via.placeholder.com/200x100',
+      'image': 'https://images.unsplash.com/photo-1742943892627-f7e4ddf91224?q=80&w=3269&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       'date': '2025-05-03',
       'price': '1.5K',
       'rating': 4.6,
@@ -70,7 +70,7 @@ class ProfilePage extends StatelessWidget {
       children: [
         const CircleAvatar(
           radius: 40,
-          backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+          backgroundImage: NetworkImage('https://randomuser.me/api/portraits/men/75.jpg'),
         ),
         const SizedBox(width: 16),
         Expanded(

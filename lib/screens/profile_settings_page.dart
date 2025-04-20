@@ -13,12 +13,12 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
   final TextEditingController nameController = TextEditingController(text: "Fırat Yılmaz");
   final TextEditingController emailController = TextEditingController(text: "firat@mail.com");
 
-  String profileImageUrl = 'https://via.placeholder.com/150';
+  String profileImageUrl = 'https://randomuser.me/api/portraits/men/75.jpg';
 
   void _changeProfilePicture() {
     // For now, simulate changing the picture
     setState(() {
-      profileImageUrl = 'https://via.placeholder.com/150/FF0066/FFFFFF?text=Updated';
+      profileImageUrl = 'https://randomuser.me/api/portraits/women/65.jpg';
     });
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Profil fotoğrafı güncellendi!")),
