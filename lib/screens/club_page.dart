@@ -5,6 +5,7 @@ import '../utils/app_text_styles.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../utils/club_utils.dart';
 
+// for testing something delete this commit later!!
 
 final List<Map<String, dynamic>> dummyClubs = [
   {
