@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "925662650927",
+    "project_id": "sueventapp",
+    "storage_bucket": "sueventapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:925662650927:android:bb9a3f9cdc90789dc09cda",
+        "android_client_info": {
+          "package_name": "com.example.events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "925662650927-a3bai34sqkj7tb0oflk86tnr623ndl6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.events",
+            "certificate_hash": "19446a62f8b1075c6312da07dc474140186bc189"
+          }
+        },
+        {
+          "client_id": "925662650927-qcs76qp8edj0769a8sbsqqe92l4vgl0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnHcnotdtSLsCaT463w6qKcvk7VxTnL2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "925662650927-qcs76qp8edj0769a8sbsqqe92l4vgl0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

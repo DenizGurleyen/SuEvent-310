@@ -7,8 +7,11 @@ import 'screens/explore_page.dart';
 import 'screens/profile_page.dart';
 import 'screens/profile_settings_page.dart';
 import 'screens/settings_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const SuEventApp());
 }
 
