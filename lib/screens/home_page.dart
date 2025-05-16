@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_padding.dart';
 import '../utils/app_text_styles.dart';
@@ -49,6 +51,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
@@ -64,7 +68,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildHeader(),
+                        _buildHeader(context),
                         const SizedBox(height: 20),
                         _buildSearchBar(),
                         const SizedBox(height: 20),
@@ -84,20 +88,68 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final userName = authProvider.user?.email?.split('@').first ?? 'User';
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Merhaba, Fırat", style: AppTextStyles.header),
+            Text("Merhaba, $userName", style: AppTextStyles.header),
             Text("Hangi Etkinliklere Göz Atmak İstiyorsun", style: AppTextStyles.subHeader),
           ],
         ),
-        CircleAvatar(
-          backgroundColor: AppColors.lightGreen,
-          child: Icon(Icons.notifications, color: AppColors.primaryDark),
+        Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppColors.lightGreen,
+              child: Icon(Icons.notifications, color: AppColors.primaryDark),
+            ),
+            const SizedBox(width: 10),
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Logout'),
+                    content: const Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          print('Logout button pressed, closing dialog');
+                          Navigator.pop(context);
+                          print('Calling authProvider.signOut()');
+                          await authProvider.signOut();
+                          print('After signOut, isAuthenticated=${authProvider.isAuthenticated}');
+                          
+                          // Force navigation to login if needed
+                          if (!authProvider.isAuthenticated) {
+                            print('Navigating to login page');
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/login', 
+                              (route) => false // Remove all previous routes
+                            );
+                          }
+                        },
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.red[100],
+                child: const Icon(Icons.logout, color: Colors.red),
+              ),
+            ),
+          ],
         ),
       ],
     );
