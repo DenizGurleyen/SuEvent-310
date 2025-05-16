@@ -134,6 +134,25 @@ class EventDetailsPage extends StatelessWidget {
                     event.description,
                     style: const TextStyle(fontSize: 16),
                   ),
+                  
+                  if (event.isFavorited) ...[
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          eventProvider.toggleEventFavorite(event.id);
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.star_border),
+                        label: const Text("Kaydedilenlerden Çıkar"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

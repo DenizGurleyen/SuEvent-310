@@ -17,15 +17,23 @@ class AuthProvider extends ChangeNotifier {
   // Initialize provider and listen to auth state changes
   AuthProvider() {
     print('Initializing AuthProvider - setting up auth state listener');
-    _authService.authStateChanges.listen((User? user) {
+    _authService.authStateChanges.listen((User? user) async {
       print('Auth state changed: user=${user?.email ?? 'null'}');
-      _user = user;
+      if (user != null) {
+        // Ensure we have the latest user data with the display name
+        print('AuthProvider: User is not null, displayName=${user.displayName}');
+        
+        // Store the refreshed user
+        _user = user;
+      } else {
+        _user = null;
+      }
       notifyListeners();
     });
   }
   
   // Sign up with email and password
-  Future<bool> signUp(String email, String password) async {
+  Future<bool> signUp(String email, String password, {String? displayName}) async {
     print('AuthProvider: Starting signUp with email: $email');
     _error = null;
     _isLoading = true;
@@ -33,7 +41,11 @@ class AuthProvider extends ChangeNotifier {
     
     try {
       print('AuthProvider: Calling signUpWithEmailAndPassword');
-      final userCredential = await _authService.signUpWithEmailAndPassword(email, password);
+      final userCredential = await _authService.signUpWithEmailAndPassword(
+        email, 
+        password,
+        displayName: displayName,
+      );
       print('AuthProvider: Sign up successful, user: ${userCredential.user?.email ?? 'null'}');
       _isLoading = false;
       notifyListeners();

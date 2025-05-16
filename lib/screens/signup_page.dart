@@ -47,10 +47,12 @@ class _SignUpPageState extends State<SignUpPage> {
       try {
         // Add a print statement to help debug
         print('Starting signup process with email: ${_emailController.text.trim()}');
+        print('SignUpPage: Name from controller: ${_nameController.text.trim()}');
         
         final success = await authProvider.signUp(
           _emailController.text.trim(),
           _passwordController.text.trim(),
+          displayName: _nameController.text.trim(),
         );
         
         // Add debug statement
@@ -58,8 +60,14 @@ class _SignUpPageState extends State<SignUpPage> {
         
         if (success && mounted) {
           print('Successfully signed up - navigating to home page');
+          
+          // Add a small delay to ensure Firebase has time to process the displayName update
+          await Future.delayed(const Duration(milliseconds: 500));
+          
           // Explicitly navigate to home page on success
-          Navigator.of(context).pushReplacementNamed('/home');
+          if (mounted) {
+            Navigator.of(context).pushReplacementNamed('/home');
+          }
         } else if (!success && mounted && authProvider.error != null) {
           print('Signup failed with error: ${authProvider.error}');
           _showErrorDialog(authProvider.error!);

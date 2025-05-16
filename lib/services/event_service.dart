@@ -399,6 +399,32 @@ class EventService {
       });
   }
   
+  // Get top events by like count
+  Stream<List<Event>> getTopEventsByLikes(int limit) {
+    return _eventsCollection
+      .orderBy('likeCount', descending: true)
+      .limit(limit)
+      .snapshots()
+      .asyncMap((snapshot) async {
+        final events = snapshot.docs.map((doc) => Event.fromFirestore(doc)).toList();
+        
+        // If user is logged in, check which events they've liked and favorited
+        if (currentUserId != null) {
+          final likedEvents = await getLikedEventIds();
+          final favoritedEvents = await getFavoritedEventIds();
+          
+          return events.map((event) {
+            return event.copyWith(
+              isLiked: likedEvents.contains(event.id),
+              isFavorited: favoritedEvents.contains(event.id),
+            );
+          }).toList();
+        }
+        
+        return events;
+      });
+  }
+  
   // Initialize the database with dummy event data if it's empty
   Future<void> initializeDatabaseIfEmpty() async {
     final snapshot = await _eventsCollection.limit(1).get();

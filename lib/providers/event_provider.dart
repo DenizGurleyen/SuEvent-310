@@ -12,6 +12,7 @@ class EventProvider extends ChangeNotifier {
   List<Event> _clubEvents = [];
   List<Event> _nonClubEvents = [];
   List<Event> _favoritedEvents = [];
+  List<Event> _topEvents = [];
   bool _isLoading = true;
   String? _error;
   
@@ -20,12 +21,14 @@ class EventProvider extends ChangeNotifier {
   StreamSubscription<List<Event>>? _clubEventsSubscription;
   StreamSubscription<List<Event>>? _nonClubEventsSubscription;
   StreamSubscription<List<Event>>? _favoritedEventsSubscription;
+  StreamSubscription<List<Event>>? _topEventsSubscription;
   
   // Getters
   List<Event> get events => _events;
   List<Event> get clubEvents => _clubEvents;
   List<Event> get nonClubEvents => _nonClubEvents;
   List<Event> get favoritedEvents => _favoritedEvents;
+  List<Event> get topEvents => _topEvents;
   bool get isLoading => _isLoading;
   String? get error => _error;
   
@@ -96,6 +99,18 @@ class EventProvider extends ChangeNotifier {
           notifyListeners();
         }
       );
+      
+      // Listen for top events by likes
+      _topEventsSubscription = _eventService.getTopEventsByLikes(5).listen(
+        (events) {
+          _topEvents = events;
+          notifyListeners();
+        },
+        onError: (e) {
+          _error = 'Error loading top events: ${e.toString()}';
+          notifyListeners();
+        }
+      );
     }).catchError((e) {
       _error = 'Error initializing database: ${e.toString()}';
       _isLoading = false;
@@ -109,10 +124,12 @@ class EventProvider extends ChangeNotifier {
     _clubEventsSubscription?.cancel();
     _nonClubEventsSubscription?.cancel();
     _favoritedEventsSubscription?.cancel();
+    _topEventsSubscription?.cancel();
     _eventsSubscription = null;
     _clubEventsSubscription = null;
     _nonClubEventsSubscription = null;
     _favoritedEventsSubscription = null;
+    _topEventsSubscription = null;
   }
   
   // Like/unlike an event
@@ -128,6 +145,75 @@ class EventProvider extends ChangeNotifier {
   // Favorite/unfavorite an event
   Future<void> toggleEventFavorite(String eventId) async {
     try {
+      // Find the event in our lists and toggle its favorited state immediately in the UI
+      bool currentIsFavorited = false;
+      
+      // Update _events list
+      final eventIndex = _events.indexWhere((e) => e.id == eventId);
+      if (eventIndex != -1) {
+        currentIsFavorited = _events[eventIndex].isFavorited;
+        _events[eventIndex] = _events[eventIndex].copyWith(
+          isFavorited: !currentIsFavorited
+        );
+      }
+      
+      // Update _clubEvents list
+      final clubEventIndex = _clubEvents.indexWhere((e) => e.id == eventId);
+      if (clubEventIndex != -1) {
+        _clubEvents[clubEventIndex] = _clubEvents[clubEventIndex].copyWith(
+          isFavorited: !currentIsFavorited
+        );
+      }
+      
+      // Update _nonClubEvents list
+      final nonClubEventIndex = _nonClubEvents.indexWhere((e) => e.id == eventId);
+      if (nonClubEventIndex != -1) {
+        _nonClubEvents[nonClubEventIndex] = _nonClubEvents[nonClubEventIndex].copyWith(
+          isFavorited: !currentIsFavorited
+        );
+      }
+      
+      // Update _topEvents list
+      final topEventIndex = _topEvents.indexWhere((e) => e.id == eventId);
+      if (topEventIndex != -1) {
+        _topEvents[topEventIndex] = _topEvents[topEventIndex].copyWith(
+          isFavorited: !currentIsFavorited
+        );
+      }
+      
+      // Update _favoritedEvents list
+      if (!currentIsFavorited) {
+        // If it wasn't favorited before, find the event and add it to favorites
+        final eventToAdd = _events.firstWhere((e) => e.id == eventId, 
+            orElse: () => _clubEvents.firstWhere((e) => e.id == eventId, 
+              orElse: () => _nonClubEvents.firstWhere((e) => e.id == eventId,
+                orElse: () => _topEvents.firstWhere((e) => e.id == eventId,
+                  orElse: () => Event(
+                    id: 'not-found', 
+                    title: '',
+                    organizer: '',
+                    description: '',
+                    date: DateTime.now(),
+                    location: '',
+                    isClubEvent: false,
+                  )
+                )
+              )
+            )
+        );
+        
+        if (eventToAdd.id != 'not-found') {
+          _favoritedEvents.add(eventToAdd.copyWith(isFavorited: true));
+        }
+      } else {
+        // If it was favorited before, remove it from favorites
+        _favoritedEvents.removeWhere((e) => e.id == eventId);
+      }
+      
+      // Notify UI of changes
+      notifyListeners();
+      
+      // Update the server state
       await _eventService.toggleEventFavorite(eventId);
     } catch (e) {
       _error = 'Error toggling favorite status: ${e.toString()}';

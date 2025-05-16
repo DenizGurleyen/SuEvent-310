@@ -11,7 +11,7 @@ class AuthService extends ChangeNotifier {
   Stream<User?> get authStateChanges => _auth.authStateChanges();
   
   // Sign up with email and password
-  Future<UserCredential> signUpWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential> signUpWithEmailAndPassword(String email, String password, {String? displayName}) async {
     print('AuthService: Starting signUpWithEmailAndPassword for email: $email');
     try {
       print('AuthService: Calling Firebase createUserWithEmailAndPassword');
@@ -20,6 +20,19 @@ class AuthService extends ChangeNotifier {
         password: password,
       );
       print('AuthService: Firebase createUserWithEmailAndPassword successful, uid: ${userCredential.user?.uid ?? 'null'}');
+      
+      // Set display name if provided
+      if (displayName != null && displayName.isNotEmpty && userCredential.user != null) {
+        print('AuthService: Setting display name to: $displayName');
+        await userCredential.user!.updateDisplayName(displayName);
+        
+        // Reload the user to ensure the display name is updated
+        print('AuthService: Reloading user to refresh profile');
+        await userCredential.user!.reload();
+        // Get the updated user
+        final updatedUser = _auth.currentUser;
+        print('AuthService: After reload, displayName=${updatedUser?.displayName}');
+      }
       
       // Log additional info about the user credential
       print('AuthService: User created successfully');
