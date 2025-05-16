@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/club_provider.dart';
+import 'providers/event_provider.dart';
 import 'screens/login_page.dart';
 import 'screens/signup_page.dart';
 import 'screens/home_page.dart';
@@ -28,6 +29,7 @@ class SuEventApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => ClubProvider()),
+        ChangeNotifierProvider(create: (context) => EventProvider()),
       ],
       child: MaterialApp(
         title: 'SuEvent',
